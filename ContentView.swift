@@ -1,12 +1,21 @@
 import SwiftUI
+import SpriteKit
+import AVFoundation
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, GitHub!")
-        }
+        
+    var scene: SKScene {
+        let scene = GameScene()
+        scene.size = CGSize(width: 1000, height: 1000)
+        scene.scaleMode = .aspectFill
+        return scene
     }
+    
+    var body: some View {
+            SpriteView(scene: scene)
+            .scaledToFill()
+        
+        .background(Color.pink)
+    }
+    
 }
