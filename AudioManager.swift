@@ -17,7 +17,7 @@ class AudioManager {
     var gameScene: GameScene?
     
     func playMusicA(forResource: String) {
-        let soundURL = Bundle.main.url(forResource: forResource, withExtension: "wav")
+        let soundURL = Bundle.main.url(forResource: forResource, withExtension: "mp3")
         
         
         do {
@@ -32,7 +32,7 @@ class AudioManager {
     }
     
     func playMusicB(forResource: String) {
-        let soundURL = Bundle.main.url(forResource: forResource, withExtension: "wav")
+        let soundURL = Bundle.main.url(forResource: forResource, withExtension: "mp3")
         
         do {
         try playerB = AVAudioPlayer(contentsOf: soundURL!)

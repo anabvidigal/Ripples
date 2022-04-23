@@ -1,3 +1,10 @@
+//
+//  ContentView.swift
+//  Ripples
+//
+//  Created by Bittenco on 22/04/22.
+//
+
 import SwiftUI
 import SpriteKit
 import AVFoundation
