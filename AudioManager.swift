@@ -19,14 +19,13 @@ class AudioManager {
     func playMusicA(forResource: String) {
         let soundURL = Bundle.main.url(forResource: forResource, withExtension: "mp3")
         
-        
         do {
         try playerA = AVAudioPlayer(contentsOf: soundURL!)
         } catch {
             print(error)
         }
         
-        playerA?.setVolume(1, fadeDuration: 1)
+        playerA?.setVolume(0, fadeDuration: 1)
         playerA?.numberOfLoops = -1
         playerA?.play()
     }
@@ -59,18 +58,19 @@ class AudioManager {
         if volume >= 0.5 {
             player.volume = 0.49
         }
-        
-//        if volume < 0 {
-//            player.setVolume(0, fadeDuration: 0)
-//        }; if volume < 0.3 {
-//            player.setVolume(0.1, fadeDuration: 0)
-//        }; if volume < 0.6 {
-//            player.setVolume(0.3, fadeDuration: 0)
-//        }; if volume > 0.6 {
-//            player.setVolume(0.5, fadeDuration: 0)
-//        }
-        
     }
+    
+    // Attempt to modulate volume
+    
+        //        if volume < 0 {
+        //            player.setVolume(0, fadeDuration: 0)
+        //        }; if volume < 0.3 {
+        //            player.setVolume(0.1, fadeDuration: 0)
+        //        }; if volume < 0.6 {
+        //            player.setVolume(0.3, fadeDuration: 0)
+        //        }; if volume > 0.6 {
+        //            player.setVolume(0.5, fadeDuration: 0)
+        //        }
     
 //    func raiseVolume() {
 //        player?.setVolume(1, fadeDuration: 0)

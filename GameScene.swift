@@ -97,6 +97,8 @@ class GameScene: SKScene {
             print("chaptwo")
         }
         
+    }
+        
         // Code for touch on specific node
 //        if let touch = touches.first {
 //            let location = touch.location(in: self)
@@ -108,43 +110,46 @@ class GameScene: SKScene {
 //                }
 //            }
 //        }
-    }
     
     func introTouched() {
         status = .chapterOne
         fadeOutIntro()
+        fadeInMainCircle()
     }
     
     func chapterOneInit() {
         
 //      First chapter
         setupMainCircle()
+//        addMainCircle()
         setupOtherCircle()
-//            audioManager.playerB!.volume = 0
+        audioManager.playerB!.volume = 0
     }
     
-
     
     // First chapter
     func setupMainCircle() {
-        
-        audioManager.playMusicA(forResource: "csharp")
-        audioManager.playMusicB(forResource: "accents")
-        
-//        mainCircle.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        mainCircle.position = CGPoint(x: frame.height/2, y: frame.width/2)
+        mainCircle.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        mainCircle.alpha = 0
+//        mainCircle.position = CGPoint(x: frame.height/2, y: frame.width/2)
         mainCircle.glowWidth = 1.0
         mainCircle.fillColor = .clear
         mainCircle.name = "mainCircle"
     }
     
-    func addMainCircle() {
+    func fadeInMainCircle() {
         self.addChild(mainCircle)
+//        let wait = SKAction.wait(forDuration: 2)
+//        let fadeIn = SKAction.fadeIn(withDuration: 3)
+        let animation = SKAction.sequence([
+            .wait(forDuration: 2),
+            .fadeIn(withDuration: 3)
+        ])
+        mainCircle.run(animation)
     }
     
     func setupOtherCircle() {
-        
-        otherCircle.position = CGPoint(x: -90, y: -90)
+        otherCircle.position = CGPoint(x: (mainCircle.position.x)-900, y: (mainCircle.position.y)-900)
         otherCircle.glowWidth = 1.0
         otherCircle.fillColor = .clear
         otherCircle.name = "otherCircle"
@@ -161,6 +166,16 @@ class GameScene: SKScene {
         ])
         animation.timingMode = SKActionTimingMode.easeInEaseOut
         otherCircle.run(animation)
+    }
+    
+    // Music
+    func setupMusic() {
+        audioManager.playMusicA(forResource: "csharp")
+        audioManager.playMusicB(forResource: "accents")
+    }
+    
+    func playMainCircleMusic() {
+        
     }
     
     func playOtherCircleMusic() {
