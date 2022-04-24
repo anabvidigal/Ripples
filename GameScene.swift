@@ -16,7 +16,8 @@ class GameScene: SKScene {
     
     // Intro
     let introImage = SKSpriteNode(imageNamed: "Consolidated-Clear")
-    
+    let introQuoteImage = SKSpriteNode(imageNamed: "introQuote-transp")
+
     // First chapter
     let mainCircle = SKShapeNode(circleOfRadius: 10)
     let otherCircle = SKShapeNode(circleOfRadius: 10)
@@ -24,15 +25,15 @@ class GameScene: SKScene {
     
     // DIDMOVE
     override func didMove(to view: SKView) {
-        setupIntro()
+        playIntro()
         setupMainCircle()
         setupOtherCircle()
         setupMusic()
     }
     
     // Intro functions
-    func setupIntro() {
-        introImage.size = CGSize(width: 800, height: 800)
+    func playIntro() {
+        introImage.size = CGSize(width: frame.width/1.1, height: frame.height/1.1)
         introImage.position = CGPoint(x: frame.height/2, y: frame.width/2)
         addChild(introImage)
         animateIntro()
@@ -53,6 +54,27 @@ class GameScene: SKScene {
         let sequence = SKAction.sequence([fadeOut, remove])
         introImage.run(sequence)
     }
+    
+    func setupIntroQuote() {
+        introQuoteImage.size = CGSize(width: frame.width/1.8, height: frame.height/1.8)
+        introQuoteImage.position = CGPoint(x: frame.height/2, y: frame.width/2)
+        introQuoteImage.alpha = 0
+        addChild(introQuoteImage)
+    }
+    
+    func fadeInIntroQuote() {
+        let fadeIn = SKAction.fadeIn(withDuration: 3)
+        fadeIn.timingMode = SKActionTimingMode.easeIn
+        introQuoteImage.run(fadeIn)
+    }
+    
+    func fadeOutIntroQuote() {
+        let fadeOut = SKAction.fadeOut(withDuration: 2)
+        fadeOut.timingMode = SKActionTimingMode.easeOut
+        introQuoteImage.run(fadeOut)
+    }
+    
+    
     
     // Spatial Audio Test
 //    func playAudioNodeTest() {
@@ -90,13 +112,13 @@ class GameScene: SKScene {
         
         switch status {
         case .intro:
-            startChapterA()
+            startIntroQuote()
         case .introTransition:
             chapterAInit()
-        case .chapterA:
-            status = .chapterB
-        case .chapterB:
-            print("chapB")
+        case .chapterA1:
+            chapterARun()
+        case .chapterA2:
+            print("chapter A2 clicked")
         }
         
     }
@@ -113,20 +135,23 @@ class GameScene: SKScene {
 //            }
 //        }
     
-    func startChapterA() {
-        status = .chapterA
+    // First click
+    func startIntroQuote() {
+        status = .introTransition
         fadeOutIntro()
-        fadeInMainCircle()
+        setupIntroQuote()
+        fadeInIntroQuote()
         fadeInMainCircleMusic()
     }
     
     func chapterAInit() {
-        
-//      First chapter
-        setupMainCircle()
-        setupOtherCircle()
-        
-//        audioManager.playerB!.volume = 0
+        fadeOutIntroQuote()
+        fadeInMainCircle()
+    }
+    
+    func chapterARun() {
+        addOtherCircle()
+        fadeInOtherCircleMusic()
     }
     
     
@@ -171,11 +196,13 @@ class GameScene: SKScene {
         otherCircle.run(animation)
     }
     
-    func setupChapterAText() {
-        chapterAText = SKLabelNode(fontNamed: "New York")
-        chapterAText.text = "testing text"
-        
-    }
+    // Texts
+//    func setupChapterAText() {
+//        chapterAText = SKLabelNode(fontNamed: "New York")
+//        chapterAText.text = "From the very first days of our lives, we are surrounded by people who care for us"
+//
+//    }
+    
     
     // Music
     func setupMusic() {
@@ -202,6 +229,6 @@ extension SKNode {
 enum PlaygroundStatus {
     case intro
     case introTransition
-    case chapterA
-    case chapterB
+    case chapterA1
+    case chapterA2
 }

@@ -15,6 +15,7 @@ struct ContentView: View {
         let scene = GameScene()
         scene.size = CGSize(width: 1000, height: 1000)
         scene.scaleMode = .aspectFill
+        scene.backgroundColor = .black
         return scene
     }
     
@@ -22,7 +23,7 @@ struct ContentView: View {
             SpriteView(scene: scene)
             .scaledToFill()
         
-        .background(Color.pink)
+        .background(Color.black)
     }
     
 }

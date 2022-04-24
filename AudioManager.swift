@@ -25,7 +25,7 @@ class AudioManager {
             print(error)
         }
         
-        playerA?.setVolume(0, fadeDuration: 1)
+        playerA?.setVolume(0, fadeDuration: 0)
         playerA?.numberOfLoops = -1
         playerA?.play()
     }
@@ -39,7 +39,7 @@ class AudioManager {
             print(error)
         }
         
-        playerB?.setVolume(0, fadeDuration: 1)
+        playerB?.setVolume(0, fadeDuration: 0)
         playerB?.numberOfLoops = -1
         playerB?.play()
     }
@@ -57,6 +57,8 @@ class AudioManager {
         
         if volume >= 0.5 {
             player.volume = 0.49
+        }; if volume <= 0.3 {
+            player.volume = 0
         }
     }
     
