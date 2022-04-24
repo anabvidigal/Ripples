@@ -20,12 +20,14 @@ class GameScene: SKScene {
     // First chapter
     let mainCircle = SKShapeNode(circleOfRadius: 10)
     let otherCircle = SKShapeNode(circleOfRadius: 10)
+    var chapterAText: SKLabelNode!
     
     // DIDMOVE
     override func didMove(to view: SKView) {
         setupIntro()
         setupMainCircle()
         setupOtherCircle()
+        setupMusic()
     }
     
     // Intro functions
@@ -80,7 +82,7 @@ class GameScene: SKScene {
         let currentVolume = 1 - (distance / maxDistance)
         
         // Why is this crashing?
-//        audioManager.updateVolume(volume: Float(currentVolume), player: audioManager.playerB!)
+        audioManager.updateVolume(volume: Float(currentVolume), player: audioManager.playerB!)
         
     }
     
@@ -88,13 +90,13 @@ class GameScene: SKScene {
         
         switch status {
         case .intro:
-            introTouched()
+            startChapterA()
         case .introTransition:
-            chapterOneInit()
-        case .chapterOne:
-            status = .chapterTwo
-        case .chapterTwo:
-            print("chaptwo")
+            chapterAInit()
+        case .chapterA:
+            status = .chapterB
+        case .chapterB:
+            print("chapB")
         }
         
     }
@@ -111,19 +113,20 @@ class GameScene: SKScene {
 //            }
 //        }
     
-    func introTouched() {
-        status = .chapterOne
+    func startChapterA() {
+        status = .chapterA
         fadeOutIntro()
         fadeInMainCircle()
+        fadeInMainCircleMusic()
     }
     
-    func chapterOneInit() {
+    func chapterAInit() {
         
 //      First chapter
         setupMainCircle()
-//        addMainCircle()
         setupOtherCircle()
-        audioManager.playerB!.volume = 0
+        
+//        audioManager.playerB!.volume = 0
     }
     
     
@@ -168,17 +171,23 @@ class GameScene: SKScene {
         otherCircle.run(animation)
     }
     
-    // Music
-    func setupMusic() {
-        audioManager.playMusicA(forResource: "csharp")
-        audioManager.playMusicB(forResource: "accents")
-    }
-    
-    func playMainCircleMusic() {
+    func setupChapterAText() {
+        chapterAText = SKLabelNode(fontNamed: "New York")
+        chapterAText.text = "testing text"
         
     }
     
-    func playOtherCircleMusic() {
+    // Music
+    func setupMusic() {
+        audioManager.playMusicA(forResource: "ChapA-1")
+        audioManager.playMusicB(forResource: "ChapA-2")
+    }
+    
+    func fadeInMainCircleMusic() {
+        audioManager.fadeIn(player: audioManager.playerA!)
+    }
+    
+    func fadeInOtherCircleMusic() {
         audioManager.fadeIn(player: audioManager.playerB!)
     }
     
@@ -193,6 +202,6 @@ extension SKNode {
 enum PlaygroundStatus {
     case intro
     case introTransition
-    case chapterOne
-    case chapterTwo
+    case chapterA
+    case chapterB
 }
