@@ -21,7 +21,8 @@ class GameScene: SKScene {
     // First chapter
     let mainCircle = SKShapeNode(circleOfRadius: 10)
     let otherCircle = SKShapeNode(circleOfRadius: 10)
-    var chapterAText: SKLabelNode!
+    let firstPhrase = SKSpriteNode(imageNamed: "text-a")
+    
     
     // DIDMOVE
     override func didMove(to view: SKView) {
@@ -57,11 +58,17 @@ class GameScene: SKScene {
     
     func setupIntroQuote() {
         introQuoteImage.size = CGSize(width: frame.width/1.8, height: frame.height/1.8)
-        introQuoteImage.position = CGPoint(x: frame.height/2, y: frame.width/2)
+        introQuoteImage.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         introQuoteImage.alpha = 0
         addChild(introQuoteImage)
     }
     
+    func setupFirstPhrase() {
+        firstPhrase.size = CGSize(width: frame.width/2, height: frame.height/2)
+        mainCircle.position = CGPoint(x: self.frame.midX+500, y: self.frame.midY)
+    }
+    
+    // Fade-in and Fade-out
     func fadeInIntroQuote() {
         let fadeIn = SKAction.fadeIn(withDuration: 3)
         fadeIn.timingMode = SKActionTimingMode.easeIn
@@ -74,7 +81,17 @@ class GameScene: SKScene {
         introQuoteImage.run(fadeOut)
     }
     
+    func fadeInFirstPhrase() {
+        let fadeIn = SKAction.fadeIn(withDuration: 3)
+        fadeIn.timingMode = SKActionTimingMode.easeIn
+        firstPhrase.run(fadeIn)
+    }
     
+    func fadeOutFirstPhrase() {
+        let fadeOut = SKAction.fadeOut(withDuration: 2)
+        fadeOut.timingMode = SKActionTimingMode.easeOut
+        firstPhrase.run(fadeOut)
+    }
     
     // Spatial Audio Test
 //    func playAudioNodeTest() {
@@ -107,21 +124,6 @@ class GameScene: SKScene {
         audioManager.updateVolume(volume: Float(currentVolume), player: audioManager.playerB!)
         
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        switch status {
-        case .intro:
-            startIntroQuote()
-        case .introTransition:
-            chapterAInit()
-        case .chapterA1:
-            chapterARun()
-        case .chapterA2:
-            print("chapter A2 clicked")
-        }
-        
-    }
         
         // Code for touch on specific node
 //        if let touch = touches.first {
@@ -135,31 +137,11 @@ class GameScene: SKScene {
 //            }
 //        }
     
-    // First click
-    func startIntroQuote() {
-        status = .introTransition
-        fadeOutIntro()
-        setupIntroQuote()
-        fadeInIntroQuote()
-        fadeInMainCircleMusic()
-    }
+    // Circles
     
-    func chapterAInit() {
-        fadeOutIntroQuote()
-        fadeInMainCircle()
-    }
-    
-    func chapterARun() {
-        addOtherCircle()
-        fadeInOtherCircleMusic()
-    }
-    
-    
-    // First chapter
     func setupMainCircle() {
         mainCircle.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         mainCircle.alpha = 0
-//        mainCircle.position = CGPoint(x: frame.height/2, y: frame.width/2)
         mainCircle.glowWidth = 1.0
         mainCircle.fillColor = .clear
         mainCircle.name = "mainCircle"
@@ -167,8 +149,6 @@ class GameScene: SKScene {
     
     func fadeInMainCircle() {
         self.addChild(mainCircle)
-//        let wait = SKAction.wait(forDuration: 2)
-//        let fadeIn = SKAction.fadeIn(withDuration: 3)
         let animation = SKAction.sequence([
             .wait(forDuration: 2),
             .fadeIn(withDuration: 3)
@@ -183,25 +163,21 @@ class GameScene: SKScene {
         otherCircle.name = "otherCircle"
     }
     
-    func addOtherCircle() {
+    func runOtherCircle() {
         
         self.addChild(otherCircle)
 
-        let animation = SKAction.sequence([
-            .move(to: CGPoint(x: (mainCircle.position.x)-30, y: (mainCircle.position.y)-30), duration: 2),
-            .wait(forDuration: 3),
-            .move(to: CGPoint(x: (mainCircle.position.x)+210, y: (mainCircle.position.y)+120), duration: 2)
-        ])
-        animation.timingMode = SKActionTimingMode.easeInEaseOut
-        otherCircle.run(animation)
-    }
+        let approach = SKAction.move(to: CGPoint(x: (mainCircle.position.x)-30, y: (mainCircle.position.y)-30), duration: 4)
+        let wait = SKAction.wait(forDuration: 3)
+        let stepBack = SKAction.move(to: CGPoint(x: (mainCircle.position.x)+210, y: (mainCircle.position.y)+120), duration: 4)
+        
+        approach.timingMode = SKActionTimingMode.easeInEaseOut
+        stepBack.timingMode = SKActionTimingMode.easeInEaseOut
+        
+        let sequence = SKAction.sequence([approach, wait, stepBack])
+        otherCircle.run(sequence)
     
-    // Texts
-//    func setupChapterAText() {
-//        chapterAText = SKLabelNode(fontNamed: "New York")
-//        chapterAText.text = "From the very first days of our lives, we are surrounded by people who care for us"
-//
-//    }
+    }
     
     
     // Music
@@ -218,7 +194,36 @@ class GameScene: SKScene {
         audioManager.fadeIn(player: audioManager.playerB!)
     }
     
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        switch status {
+        case .intro:
+            status = .introTransition
+            fadeOutIntro()
+            setupIntroQuote()
+            fadeInIntroQuote()
+            fadeInMainCircleMusic()
+            
+        case .introTransition:
+            status = .chapterA1
+            fadeOutIntroQuote()
+            fadeInMainCircle()
+            fadeInFirstPhrase()
+            
+        case .chapterA1:
+            status = .chapterA2
+            runOtherCircle()
+            fadeInOtherCircleMusic()
+            
+        case .chapterA2:
+            print("chapter A2 clicked")
+        }
+        
+    }
+    
 }
+
 
 extension SKNode {
     func distance(to other: SKNode) -> CGFloat {
