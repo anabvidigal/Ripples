@@ -14,6 +14,9 @@ class AudioManager {
     var playerA: AVAudioPlayer?
     var playerB: AVAudioPlayer?
     var playerC: AVAudioPlayer?
+    var playerD: AVAudioPlayer?
+    var playerE: AVAudioPlayer?
+    var playerF: AVAudioPlayer?
     
     var gameScene: GameScene?
     

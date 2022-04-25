@@ -30,9 +30,21 @@ class GameScene: SKScene {
     let circleE = SKShapeNode(circleOfRadius: 10)
     let circleF = SKShapeNode(circleOfRadius: 10)
     
+    let circleG = SKShapeNode(circleOfRadius: 10)
+    let circleH = SKShapeNode(circleOfRadius: 10)
+    let circleI = SKShapeNode(circleOfRadius: 10)
+    let circleJ = SKShapeNode(circleOfRadius: 10)
+    let circleK = SKShapeNode(circleOfRadius: 10)
+    let circleL = SKShapeNode(circleOfRadius: 10)
+
+
+
     let firstPhrase = SKSpriteNode(imageNamed: "text-a")
+    let secondPhrase = SKSpriteNode(imageNamed: "text-d")
     
     let pressText = SKSpriteNode(imageNamed: "press")
+    
+    var canTouch: Bool = true
     
     
     // DIDMOVE
@@ -67,6 +79,17 @@ class GameScene: SKScene {
         introImage.run(sequence)
     }
     
+//    let sequence = SKAction.sequence([
+//        .wait(forDuration: 2)
+//        .run {
+//            self.setupMusic()
+//        }
+//    ])
+    
+//    let runFunc = SKAction.run {
+//        function()
+//    }
+    
     func setupIntroQuote() {
         introQuoteImage.size = CGSize(width: frame.width/1.8, height: frame.height/1.8)
         introQuoteImage.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
@@ -88,11 +111,25 @@ class GameScene: SKScene {
         addChild(firstPhrase)
     }
     
-    // Fade-ins and Fade-outs
+    func setupSecondPhrase() {
+        secondPhrase.size = CGSize(width: frame.width/2.2, height: frame.height/2.2)
+        secondPhrase.position = CGPoint(x: self.frame.midX, y: self.frame.midY-300)
+        secondPhrase.alpha = 0
+        addChild(secondPhrase)
+    }
+    
+    // >>>>>>>
+    // >>>>>>> FADE-IN AND FADE-OUTS
+    // >>>>>>>
+    
     func fadeInIntroQuote() {
         let fadeIn = SKAction.fadeIn(withDuration: 3)
+        let touchFunc = SKAction.run {
+            self.canTouch = true
+        }
+        let sequence = SKAction.sequence([fadeIn, touchFunc])
         fadeIn.timingMode = SKActionTimingMode.easeIn
-        introQuoteImage.run(fadeIn)
+        introQuoteImage.run(sequence)
     }
     
     func fadeInImage(spritenode: SKSpriteNode, duration: TimeInterval) {
@@ -121,21 +158,7 @@ class GameScene: SKScene {
         spritenode.run(sequence)
     }
     
-
-    //
-    
-    
-    //    func fadeInFirstPhrase() {
-    //
-    //        let wait = SKAction.wait(forDuration: 2)
-    //        let fadeIn = SKAction.fadeIn(withDuration: 3)
-    //        fadeIn.timingMode = SKActionTimingMode.easeIn
-    //        let sequence = SKAction.sequence([wait, fadeIn])
-    //        firstPhrase.run(sequence)
-    //    }
-    
     func fadeInFirstPhrase() {
-        
         let wait = SKAction.wait(forDuration: 2)
         let fadeIn = SKAction.fadeIn(withDuration: 3)
         let wait2 = SKAction.wait(forDuration: 6)
@@ -148,6 +171,21 @@ class GameScene: SKScene {
         
         let sequence = SKAction.sequence([wait, fadeIn, wait2, transform1, wait2, transform2])
         firstPhrase.run(sequence)
+    }
+    
+    func fadeInSecondPhrase() {
+        let wait = SKAction.wait(forDuration: 10)
+        let fadeIn = SKAction.fadeIn(withDuration: 3)
+        let wait2 = SKAction.wait(forDuration: 4)
+        let transform = SKAction.setTexture(SKTexture(imageNamed: "text-e"))
+        let wait3 = SKAction.wait(forDuration: 4)
+        let transform2 = SKAction.setTexture(SKTexture(imageNamed: "text-f"))
+        
+        fadeIn.timingMode = SKActionTimingMode.easeIn
+        transform.timingMode = SKActionTimingMode.easeInEaseOut
+        
+        let sequence = SKAction.sequence([wait, fadeIn, wait2, transform, wait3, transform2])
+        secondPhrase.run(sequence)
     }
     
     func fadeOutFirstPhrase() {
@@ -172,11 +210,19 @@ class GameScene: SKScene {
     //            music.run(repeatForever)
     //    }
     
-    // UPDATE
+    
+    // >>>>>>>
+    // >>>>>>> UPDATE
+    // >>>>>>>
+    
     override func update(_ currentTime: TimeInterval) {
         updateFirstCircleVolume()
         updateSecondCircleVolume()
     }
+    
+    // >>>>>>>
+    // >>>>>>> SOUND
+    // >>>>>>>
     
     // Controlling volume with distance
     func updateFirstCircleVolume() {
@@ -186,24 +232,6 @@ class GameScene: SKScene {
         print("first circle: \(currentVolume)")
         
         modulateAudio(input: currentVolume, player: audioManager.playerB!)
-        //        if currentVolume < 0 {
-        //            audioManager.updateVolume(volume: 0, player: audioManager.playerB!)
-        //        }
-        //        ; if currentVolume >= 0.3 {
-        //            audioManager.updateVolume(volume: 0.1, player: audioManager.playerB!)
-        //        }
-        //        ; if currentVolume >= 0.5 {
-        //            audioManager.updateVolume(volume: 0.2, player: audioManager.playerB!)
-        //        }
-        //        ; if currentVolume >= 0.7 {
-        //            audioManager.updateVolume(volume: 0.3, player: audioManager.playerB!)
-        //        }
-        //        ; if currentVolume >= 0.8 {
-        //            audioManager.updateVolume(volume: 0.4, player: audioManager.playerB!)
-        //        }
-        //        ; if currentVolume >= 0.9 {
-        //            audioManager.updateVolume(volume: 0.5, player: audioManager.playerB!)
-        //        }
     }
     
     func updateSecondCircleVolume() {
@@ -234,6 +262,24 @@ class GameScene: SKScene {
         ; if input >= 0.9 {
             audioManager.updateVolume(volume: 0.5, player: player)
         }
+    }
+    
+    func setupMusic() {
+        audioManager.playMusicA(forResource: "ChapA-1")
+        audioManager.playMusicB(forResource: "ChapA-2")
+        audioManager.playMusicC(forResource: "ChapA-3")
+    }
+    
+    func fadeInMainCircleMusic() {
+        audioManager.fadeIn(player: audioManager.playerA!)
+    }
+    
+    func fadeInFirstCircleMusic() {
+        audioManager.fadeInLong(player: audioManager.playerB!)
+    }
+    
+    func fadeInSecondCircleMusic() {
+        audioManager.fadeInLonger(player: audioManager.playerC!)
     }
     
     // Code for touch on specific node
@@ -357,18 +403,18 @@ class GameScene: SKScene {
     }
     
     func setupSideCirclesRemoval(name: SKShapeNode, posX: CGFloat, posY: CGFloat) {
-        let moveOut = SKAction.move(by: CGVector(dx: posX, dy: posY), duration: 4)
+        let moveOut = SKAction.move(by: CGVector(dx: posX, dy: posY), duration: 3)
         moveOut.timingMode = SKActionTimingMode.easeInEaseOut
         name.run(moveOut)
     }
     
     func removeSideCircles() {
-        setupSideCirclesRemoval(name: circleA, posX: -1400, posY: -800)
-        setupSideCirclesRemoval(name: circleB, posX: -1400, posY: -600)
-        setupSideCirclesRemoval(name: circleC, posX: -1400, posY: -400)
-        setupSideCirclesRemoval(name: circleD, posX: +1400, posY: +800)
-        setupSideCirclesRemoval(name: circleE, posX: +1400, posY: +600)
-        setupSideCirclesRemoval(name: circleF, posX: +1400, posY: +400)
+        setupSideCirclesRemoval(name: circleA, posX: -300, posY: -300)
+        setupSideCirclesRemoval(name: circleB, posX: -300, posY: -300)
+        setupSideCirclesRemoval(name: circleC, posX: -300, posY: -300)
+        setupSideCirclesRemoval(name: circleD, posX: +300, posY: +300)
+        setupSideCirclesRemoval(name: circleE, posX: +300, posY: +300)
+        setupSideCirclesRemoval(name: circleF, posX: +300, posY: +300)
     }
     
     func removeMainCircles() {
@@ -376,27 +422,90 @@ class GameScene: SKScene {
         setupSideCirclesRemoval(name: secondCircle, posX: mainCircle.position.x+1200, posY: mainCircle.position.y+1200)
     }
     
-    // Music
-    func setupMusic() {
-        audioManager.playMusicA(forResource: "ChapA-1")
-        audioManager.playMusicB(forResource: "ChapA-2")
-        audioManager.playMusicC(forResource: "ChapA-3")
+    // >>>>>>>
+    // >>>>>>> CHAPTER TWO
+    // >>>>>>>
+    
+    func setupChapBCircles(name: SKShapeNode, posX: CGFloat, posY: CGFloat) {
+        name.position = CGPoint(x: posX, y: posY)
+        name.glowWidth = 1.0
+        name.fillColor = .clear
+        addChild(name)
     }
     
-    func fadeInMainCircleMusic() {
-        audioManager.fadeIn(player: audioManager.playerA!)
+    func addChapBCircles() {
+        setupChapBCircles(name: circleG, posX: 1400, posY: 800)
+        setupChapBCircles(name: circleH, posX: 1400, posY: 600)
+        setupChapBCircles(name: circleI, posX: 1400, posY: 500)
+        setupChapBCircles(name: circleJ, posX: -1400, posY: -800)
+        setupChapBCircles(name: circleK, posX: -1400, posY: -600)
+        setupChapBCircles(name: circleL, posX: -1400, posY: -500)
     }
     
-    func fadeInFirstCircleMusic() {
-        audioManager.fadeInLong(player: audioManager.playerB!)
+    func setupMoveCirclesIn(name: SKShapeNode, posX: CGFloat, posY: CGFloat, moveX: CGFloat, moveY: CGFloat) {
+        let approach = SKAction.move(to: CGPoint(x: (mainCircle.position.x)+posX, y: (mainCircle.position.y)+posY), duration: 4)
+        let wait2 = SKAction.wait(forDuration: 1)
+        let stepBack = SKAction.move(by: CGVector(dx: moveX, dy: moveY), duration: 2)
+        
+        approach.timingMode = SKActionTimingMode.easeOut
+        stepBack.timingMode = SKActionTimingMode.easeInEaseOut
+        
+        let sequence = SKAction.sequence([approach, wait2, stepBack])
+        
+        name.run(sequence)
     }
     
-    func fadeInSecondCircleMusic() {
-        audioManager.fadeInLonger(player: audioManager.playerC!)
+    func runChapBCircles() {
+        setupMoveCirclesIn(name: circleG, posX: -135, posY: -100, moveX: 50, moveY: 40)
+        setupMoveCirclesIn(name: circleH, posX: 150, posY: 100, moveX: -20, moveY: -10)
+        setupMoveCirclesIn(name: circleI, posX: -90, posY: -120, moveX: -20, moveY: -20)
+        setupMoveCirclesIn(name: circleJ, posX: +135, posY: +70, moveX: 10, moveY: 30)
+        setupMoveCirclesIn(name: circleK, posX: +200, posY: +100, moveX: 40, moveY: 50)
+        setupMoveCirclesIn(name: circleL, posX: -90, posY: +120, moveX: 10, moveY: 30)
     }
     
+    func setupSideCirclesChapBRemoval(name: SKShapeNode, posX: CGFloat, posY: CGFloat) {
+        let wait = SKAction.wait(forDuration: 10)
+        let moveOut = SKAction.move(by: CGVector(dx: posX, dy: posY), duration: 3)
+        moveOut.timingMode = SKActionTimingMode.easeInEaseOut
+        
+        let sequence = SKAction.sequence([wait, moveOut])
+        name.run(sequence)
+    }
+    
+    func chapBCirclesLeave() {
+        setupSideCirclesChapBRemoval(name: circleH, posX: -900, posY: -900)
+        setupSideCirclesChapBRemoval(name: circleI, posX: -900, posY: -900)
+        setupSideCirclesChapBRemoval(name: circleJ, posX: -900, posY: -900)
+        setupSideCirclesChapBRemoval(name: circleK, posX: 900, posY: 900)
+        setupSideCirclesChapBRemoval(name: circleL, posX: 900, posY: 900)
+    }
+    
+    func remainingCircleApproaches() {
+        let wait = SKAction.wait(forDuration: 10)
+        let moveIn = SKAction.move(by: CGVector(dx: 40, dy: 30), duration: 2)
+        
+        moveIn.timingMode = SKActionTimingMode.easeInEaseOut
+        let sequence = SKAction.sequence([wait, moveIn])
+        
+        circleG.run(sequence)
+    }
+    
+    func remainingCircleLeaves() {
+        let wait = SKAction.wait(forDuration: 16)
+        let moveOut = SKAction.move(by: CGVector(dx: -800, dy: -800), duration: 4)
+        
+        moveOut.timingMode = SKActionTimingMode.easeInEaseOut
+        let sequence = SKAction.sequence([wait, moveOut])
+        
+        circleG.run(sequence)
+    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if canTouch == false {
+            return
+        }
         
         switch status {
         case .intro:
@@ -438,7 +547,7 @@ class GameScene: SKScene {
                         
         case .chapterB:
             status = .chapterC
-            
+            setupSecondPhrase()
             fadeOutImage(spritenode: pressText, duration: 2)
             // Move out circles that stayed from previous
             removeSideCircles()
@@ -448,13 +557,20 @@ class GameScene: SKScene {
             
             /// keep sound slightly changed
             
-            // Fade in other groups of circles
+            addChapBCircles()
+            runChapBCircles()
+            chapBCirclesLeave()
             
+            remainingCircleApproaches()
+            
+            fadeInSecondPhrase()
+            
+            remainingCircleLeaves()
+            
+            // bring main in
             
             /// Fade their sounds in (with different tones)
-            
-            // Move circles
-            
+                        
             // we learn to love,
             // and learn what it is to be loved
             
