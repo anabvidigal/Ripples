@@ -20,7 +20,7 @@ class GameScene: SKScene {
 
     // First chapter
     let mainCircle = SKShapeNode(circleOfRadius: 10)
-    let otherCircle = SKShapeNode(circleOfRadius: 10)
+    let firstCircle = SKShapeNode(circleOfRadius: 10)
     let firstPhrase = SKSpriteNode(imageNamed: "text-a")
     
     
@@ -28,7 +28,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         playIntro()
         setupMainCircle()
-        setupOtherCircle()
+        setupFirstCircle()
         setupMusic()
     }
     
@@ -64,11 +64,13 @@ class GameScene: SKScene {
     }
     
     func setupFirstPhrase() {
-        firstPhrase.size = CGSize(width: frame.width/2, height: frame.height/2)
-        mainCircle.position = CGPoint(x: self.frame.midX+500, y: self.frame.midY)
+        firstPhrase.size = CGSize(width: frame.width/2.2, height: frame.height/2.2)
+        firstPhrase.position = CGPoint(x: self.frame.midX, y: self.frame.midY-300)
+        firstPhrase.alpha = 0
+        addChild(firstPhrase)
     }
     
-    // Fade-in and Fade-out
+    // Fade-ins and Fade-outs
     func fadeInIntroQuote() {
         let fadeIn = SKAction.fadeIn(withDuration: 3)
         fadeIn.timingMode = SKActionTimingMode.easeIn
@@ -82,9 +84,12 @@ class GameScene: SKScene {
     }
     
     func fadeInFirstPhrase() {
+        
+        let wait = SKAction.wait(forDuration: 2)
         let fadeIn = SKAction.fadeIn(withDuration: 3)
         fadeIn.timingMode = SKActionTimingMode.easeIn
-        firstPhrase.run(fadeIn)
+        let sequence = SKAction.sequence([wait, fadeIn])
+        firstPhrase.run(sequence)
     }
     
     func fadeOutFirstPhrase() {
@@ -111,12 +116,12 @@ class GameScene: SKScene {
     
     // UPDATE
     override func update(_ currentTime: TimeInterval) {
-        updateVolume()
+        updateFirstCircleVolume()
     }
     
     // Controlling volume with distance
-    func updateVolume() {
-        let distance = otherCircle.distance(to: mainCircle)
+    func updateFirstCircleVolume() {
+        let distance = firstCircle.distance(to: mainCircle)
         let maxDistance = sqrt(pow(frame.height / 2, 2) + pow(frame.width / 2, 2))
         let currentVolume = 1 - (distance / maxDistance)
         
@@ -156,16 +161,16 @@ class GameScene: SKScene {
         mainCircle.run(animation)
     }
     
-    func setupOtherCircle() {
-        otherCircle.position = CGPoint(x: (mainCircle.position.x)-900, y: (mainCircle.position.y)-900)
-        otherCircle.glowWidth = 1.0
-        otherCircle.fillColor = .clear
-        otherCircle.name = "otherCircle"
+    func setupFirstCircle() {
+        firstCircle.position = CGPoint(x: (mainCircle.position.x)-900, y: (mainCircle.position.y)-900)
+        firstCircle.glowWidth = 1.0
+        firstCircle.fillColor = .clear
+        firstCircle.name = "firstCircle"
     }
     
-    func runOtherCircle() {
+    func runFirstCircle() {
         
-        self.addChild(otherCircle)
+        self.addChild(firstCircle)
 
         let approach = SKAction.move(to: CGPoint(x: (mainCircle.position.x)-30, y: (mainCircle.position.y)-30), duration: 4)
         let wait = SKAction.wait(forDuration: 3)
@@ -175,7 +180,7 @@ class GameScene: SKScene {
         stepBack.timingMode = SKActionTimingMode.easeInEaseOut
         
         let sequence = SKAction.sequence([approach, wait, stepBack])
-        otherCircle.run(sequence)
+        firstCircle.run(sequence)
     
     }
     
@@ -190,7 +195,7 @@ class GameScene: SKScene {
         audioManager.fadeIn(player: audioManager.playerA!)
     }
     
-    func fadeInOtherCircleMusic() {
+    func fadeInFirstCircleMusic() {
         audioManager.fadeIn(player: audioManager.playerB!)
     }
     
@@ -199,25 +204,92 @@ class GameScene: SKScene {
         
         switch status {
         case .intro:
-            status = .introTransition
+            status = .chapterA
             fadeOutIntro()
             setupIntroQuote()
             fadeInIntroQuote()
             fadeInMainCircleMusic()
             
-        case .introTransition:
-            status = .chapterA1
+        case .chapterA:
+            status = .chapterB
             fadeOutIntroQuote()
             fadeInMainCircle()
             fadeInFirstPhrase()
+            setupFirstPhrase()
             
-        case .chapterA1:
-            status = .chapterA2
-            runOtherCircle()
-            fadeInOtherCircleMusic()
+            // from the very first days of our lives,
+            // we are surrounded by people that care for us
             
-        case .chapterA2:
-            print("chapter A2 clicked")
+            // Include first circle after delay
+            // Include second circle after delay
+            // Include other circles
+            // Include other circles sounds
+            
+            // along with them, we learn and grow
+            
+            // Keep main sound slightly changed (fade out and fade in)
+            // Include touch icon
+            
+        case .chapterB:
+            status = .chapterC
+            // Bring up after delay
+            runFirstCircle()
+            fadeInFirstCircleMusic()
+            
+            // Fade out touch icon
+            // Move out circles that stayed from previous
+            // Fade in other groups of circles
+            // Fade their sounds in (with different tones)
+            
+            // some of them stay close,
+            // while others grow apart from us
+            
+            // Move circles
+            
+            // Fade in main sound slightly transformed
+            // Include touch icon
+            
+        case .chapterC:
+            status = .chapterD
+            print("chapter C clicked")
+            
+            // we learn to love,
+            // and learn what it is to be loved
+            
+            // Move out most, but one circle
+            // Fade in new text
+            // Make movements of circling
+            
+            // sometimes, life leads us to different paths
+            
+            // Move circle away
+            
+            // but we carry on
+            // transform sound
+            // with new marks
+            
+            // Include touch icon
+            
+        case .chapterD:
+            status = .chapterE
+            print("chapter D clicked")
+            
+            // Bring some circles again
+            // Bring up their volume
+            // Bring most of the circles opacity down
+            // One circle stays
+            // Main circle beep-beeps
+            // Other circle beeps back and steps back
+            // Main circle repeats beep
+            // Other circle goes further away
+            // Main circle changes beep melody
+            // Other circle comes back closer
+            // Bring in texts
+            
+            
+        case .chapterE:
+            print("chapter E clicked")
+
         }
         
     }
@@ -233,7 +305,9 @@ extension SKNode {
 
 enum PlaygroundStatus {
     case intro
-    case introTransition
-    case chapterA1
-    case chapterA2
+    case chapterA
+    case chapterB
+    case chapterC
+    case chapterD
+    case chapterE
 }

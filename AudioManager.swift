@@ -46,7 +46,7 @@ class AudioManager {
     
     func fadeIn(player: AVAudioPlayer) {
         let player = player
-        player.setVolume(0.5, fadeDuration: 2)
+        player.setVolume(0.5, fadeDuration: 4)
     }
     
     func updateVolume(volume: Float, player: AVAudioPlayer) {
