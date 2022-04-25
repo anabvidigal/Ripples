@@ -13,6 +13,7 @@ class AudioManager {
     
     var playerA: AVAudioPlayer?
     var playerB: AVAudioPlayer?
+    var playerC: AVAudioPlayer?
     
     var gameScene: GameScene?
     
@@ -44,9 +45,35 @@ class AudioManager {
         playerB?.play()
     }
     
+    func playMusicC(forResource: String) {
+        let soundURL = Bundle.main.url(forResource: forResource, withExtension: "mp3")
+        
+        do {
+        try playerC = AVAudioPlayer(contentsOf: soundURL!)
+        } catch {
+            print(error)
+        }
+        
+        playerC?.setVolume(0, fadeDuration: 0)
+        playerC?.numberOfLoops = -1
+        playerC?.play()
+    }
+    
+    
+    
     func fadeIn(player: AVAudioPlayer) {
         let player = player
         player.setVolume(0.5, fadeDuration: 4)
+    }
+    
+    func fadeInLong(player: AVAudioPlayer) {
+        let player = player
+        player.setVolume(0.5, fadeDuration: 6)
+    }
+    
+    func fadeInLonger(player: AVAudioPlayer) {
+        let player = player
+        player.setVolume(0.5, fadeDuration: 8)
     }
     
     func updateVolume(volume: Float, player: AVAudioPlayer) {
@@ -59,6 +86,8 @@ class AudioManager {
             player.volume = 0.49
         }; if volume <= 0.3 {
             player.volume = 0
+        }; if volume >= 0.3 {
+            player.volume = 0.1
         }
     }
     
