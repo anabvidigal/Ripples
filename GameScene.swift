@@ -23,6 +23,13 @@ class GameScene: SKScene {
     let firstCircle = SKShapeNode(circleOfRadius: 10)
     let secondCircle = SKShapeNode(circleOfRadius: 10)
     
+    let circleA = SKShapeNode(circleOfRadius: 10)
+    let circleB = SKShapeNode(circleOfRadius: 10)
+    let circleC = SKShapeNode(circleOfRadius: 10)
+    let circleD = SKShapeNode(circleOfRadius: 10)
+    let circleE = SKShapeNode(circleOfRadius: 10)
+    let circleF = SKShapeNode(circleOfRadius: 10)
+    
     let firstPhrase = SKSpriteNode(imageNamed: "text-a")
     
     
@@ -157,16 +164,57 @@ class GameScene: SKScene {
         let distance = firstCircle.distance(to: mainCircle)
         let maxDistance = sqrt(pow(frame.height / 2, 2) + pow(frame.width / 2, 2))
         let currentVolume = 1 - (distance / maxDistance)
+        print("first circle: \(currentVolume)")
         
-        audioManager.updateVolume(volume: Float(currentVolume), player: audioManager.playerB!)
+        modulateAudio(input: currentVolume, player: audioManager.playerB!)
+//        if currentVolume < 0 {
+//            audioManager.updateVolume(volume: 0, player: audioManager.playerB!)
+//        }
+//        ; if currentVolume >= 0.3 {
+//            audioManager.updateVolume(volume: 0.1, player: audioManager.playerB!)
+//        }
+//        ; if currentVolume >= 0.5 {
+//            audioManager.updateVolume(volume: 0.2, player: audioManager.playerB!)
+//        }
+//        ; if currentVolume >= 0.7 {
+//            audioManager.updateVolume(volume: 0.3, player: audioManager.playerB!)
+//        }
+//        ; if currentVolume >= 0.8 {
+//            audioManager.updateVolume(volume: 0.4, player: audioManager.playerB!)
+//        }
+//        ; if currentVolume >= 0.9 {
+//            audioManager.updateVolume(volume: 0.5, player: audioManager.playerB!)
+//        }
     }
     
     func updateSecondCircleVolume() {
         let distance = secondCircle.distance(to: mainCircle)
         let maxDistance = sqrt(pow(frame.height / 2, 2) + pow(frame.width / 2, 2))
         let currentVolume = 1 - (distance / maxDistance)
+        print("second circle: \(currentVolume)")
         
-        audioManager.updateVolume(volume: Float(currentVolume), player: audioManager.playerC!)
+        modulateAudio(input: currentVolume, player: audioManager.playerC!)
+    }
+    
+    func modulateAudio(input: CGFloat, player: AVAudioPlayer) {
+        if input < 0 {
+            audioManager.updateVolume(volume: 0, player: player)
+        }
+        ; if input >= 0.3 {
+            audioManager.updateVolume(volume: 0.1, player: player)
+        }
+        ; if input >= 0.5 {
+            audioManager.updateVolume(volume: 0.2, player: player)
+        }
+        ; if input >= 0.7 {
+            audioManager.updateVolume(volume: 0.3, player: player)
+        }
+        ; if input >= 0.8 {
+            audioManager.updateVolume(volume: 0.4, player: player)
+        }
+        ; if input >= 0.9 {
+            audioManager.updateVolume(volume: 0.5, player: player)
+        }
     }
         
         // Code for touch on specific node
@@ -201,7 +249,7 @@ class GameScene: SKScene {
     }
     
     func setupFirstCircle() {
-        firstCircle.position = CGPoint(x: (mainCircle.position.x)-900, y: (mainCircle.position.y)-900)
+        firstCircle.position = CGPoint(x: (mainCircle.position.x)-1200, y: (mainCircle.position.y)-1200)
         firstCircle.glowWidth = 1.0
         firstCircle.fillColor = .clear
         firstCircle.name = "firstCircle"
@@ -225,7 +273,7 @@ class GameScene: SKScene {
     }
     
     func setupSecondCircle() {
-        secondCircle.position = CGPoint(x: (mainCircle.position.x)+900, y: (mainCircle.position.y)+900)
+        secondCircle.position = CGPoint(x: (mainCircle.position.x)+1200, y: (mainCircle.position.y)+1200)
         secondCircle.glowWidth = 1.0
         secondCircle.fillColor = .clear
         secondCircle.name = "secondCircle"
@@ -247,6 +295,38 @@ class GameScene: SKScene {
         secondCircle.run(sequence)
     }
     
+    func setupSideCircles(name: SKShapeNode, posX: CGFloat, posY: CGFloat) {
+        name.position = CGPoint(x: posX, y: posY)
+        name.glowWidth = 1.0
+        name.fillColor = .clear
+        addChild(name)
+    }
+    
+    func addSideCircles() {
+        setupSideCircles(name: circleA, posX: -900, posY: -800)
+        setupSideCircles(name: circleB, posX: -900, posY: -600)
+        setupSideCircles(name: circleC, posX: -900, posY: -400)
+        setupSideCircles(name: circleD, posX: +900, posY: +800)
+        setupSideCircles(name: circleE, posX: +900, posY: +600)
+        setupSideCircles(name: circleF, posX: +900, posY: +400)
+    }
+    
+    func setupSideCirclesMovement(name: SKShapeNode, posX: CGFloat, posY: CGFloat) {
+        let wait = SKAction.wait(forDuration: 12)
+        let approach = SKAction.move(to: CGPoint(x: (mainCircle.position.x)+posX, y: (mainCircle.position.y)+posY), duration: 6)
+        
+        approach.timingMode = SKActionTimingMode.easeOut
+        
+        let sequence = SKAction.sequence([wait, approach])
+        
+        name.run(sequence)
+    }
+    
+    func runSideCircles() {
+        setupSideCirclesMovement(name: circleA, posX: -110, posY: -90)
+        setupSideCirclesMovement(name: circleB, posX: -85, posY: -120)
+        setupSideCirclesMovement(name: circleC, posX: -50, posY: -150)
+    }
     
     // Music
     func setupMusic() {
@@ -298,6 +378,9 @@ class GameScene: SKScene {
             runSecondCircle()
 //            fadeInSecondCircleMusic()
             updateSecondCircleVolume()
+            addSideCircles()
+            
+            runSideCircles()
             
             // Include other circles
             // Include other circles sounds (?)

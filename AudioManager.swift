@@ -60,7 +60,6 @@ class AudioManager {
     }
     
     
-    
     func fadeIn(player: AVAudioPlayer) {
         let player = player
         player.setVolume(0.5, fadeDuration: 4)
@@ -82,30 +81,7 @@ class AudioManager {
         
         player.volume = volume
         
-        if volume >= 0.5 {
-            player.volume = 0.49
-        }; if volume <= 0.3 {
-            player.volume = 0
-        }; if volume >= 0.3 {
-            player.volume = 0.1
-        }
     }
-    
-    // Attempt to modulate volume
-    
-        //        if volume < 0 {
-        //            player.setVolume(0, fadeDuration: 0)
-        //        }; if volume < 0.3 {
-        //            player.setVolume(0.1, fadeDuration: 0)
-        //        }; if volume < 0.6 {
-        //            player.setVolume(0.3, fadeDuration: 0)
-        //        }; if volume > 0.6 {
-        //            player.setVolume(0.5, fadeDuration: 0)
-        //        }
-    
-//    func raiseVolume() {
-//        player?.setVolume(1, fadeDuration: 0)
-//    }
     
 }
 
