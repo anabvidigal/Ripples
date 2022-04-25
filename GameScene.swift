@@ -30,6 +30,7 @@ class GameScene: SKScene {
     let circleE = SKShapeNode(circleOfRadius: 10)
     let circleF = SKShapeNode(circleOfRadius: 10)
     
+    // Second chapter
     let circleG = SKShapeNode(circleOfRadius: 10)
     let circleH = SKShapeNode(circleOfRadius: 10)
     let circleI = SKShapeNode(circleOfRadius: 10)
@@ -37,13 +38,14 @@ class GameScene: SKScene {
     let circleK = SKShapeNode(circleOfRadius: 10)
     let circleL = SKShapeNode(circleOfRadius: 10)
 
-
-
+    // Phrases
     let firstPhrase = SKSpriteNode(imageNamed: "text-a")
     let secondPhrase = SKSpriteNode(imageNamed: "text-d")
     
+    // Press to continue
     let pressText = SKSpriteNode(imageNamed: "press")
     
+    // Controlling touch
     var canTouch: Bool = true
     
     
@@ -53,6 +55,172 @@ class GameScene: SKScene {
         setupMainCircle()
         setupFirstCircle()
         setupMusic()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        if canTouch == false {
+            return
+        }
+        
+        switch status {
+        case .intro:
+            status = .chapterA
+            fadeOutIntro()
+            setupIntroQuote()
+            fadeInIntroQuote()
+            setupPressText()
+            fadeInImage(spritenode: pressText, duration: 4)
+            fadeInMainCircleMusic()
+            
+        case .chapterA:
+            status = .chapterB
+            fadeOutIntroQuote()
+            fadeOutImage(spritenode: pressText, duration: 2)
+            fadeInMainCircle()
+            
+            // from the very first days of our lives,
+            // we are surrounded by people that care for us
+            setupFirstPhrase()
+            fadeInFirstPhrase()
+            
+            runFirstCircle()
+            updateFirstCircleVolume()
+            
+            setupSecondCircle()
+            runSecondCircle()
+            updateSecondCircleVolume()
+            
+            // Include other circles
+            addSideCircles()
+            runSideCircles()
+            
+            showPressText(spritenode: pressText, delay: 20, fadeIn: 4)
+            
+            // Include other circles sounds (?)
+            
+            // along with them, we learn and grow
+                        
+        case .chapterB:
+            status = .chapterC
+            setupSecondPhrase()
+            fadeOutImage(spritenode: pressText, duration: 2)
+            // Move out circles that stayed from previous
+            removeSideCircles()
+            removeMainCircles()
+            
+            fadeOutImage(spritenode: firstPhrase, duration: 2)
+            
+            /// keep sound slightly changed
+            
+            addChapBCircles()
+            runChapBCircles()
+            chapBCirclesLeave()
+            
+            remainingCircleApproaches()
+            
+            fadeInSecondPhrase()
+            
+            remainingCircleLeaves()
+            
+            // bring main in
+            
+            /// Fade their sounds in (with different tones)
+                        
+            // we learn to love,
+            // and learn what it is to be loved
+            
+            // Move out most, but one circle
+            // Fade in new text
+            // Make movements of circling
+            
+            // sometimes, life leads us to different paths
+            
+            // Move circle away
+            
+            // but we carry on
+            // transform sound
+            // with new marks
+            
+            // Include touch icon
+            
+            // Fade in main sound slightly transformed
+            // Include touch icon
+            
+        case .chapterC:
+            status = .chapterD
+            print("chapter C clicked")
+            
+            // we learn to love,
+            // and learn what it is to be loved
+            
+            // Move out most, but one circle
+            // Fade in new text
+            // Make movements of circling
+            
+            // sometimes, life leads us to different paths
+            
+            // Move circle away
+            
+            // but we carry on
+            // transform sound
+            // with new marks
+            
+            // Include touch icon
+            
+        case .chapterD:
+            status = .chapterE
+            print("chapter D clicked")
+            
+            
+            // Bring some circles again
+            // Bring up their volume
+            // Bring most of the circles opacity down
+            // One circle stays
+            
+            // Main circle beep-beeps
+            // Other circle beeps back and steps back
+            // Main circle repeats beep
+            // Other circle goes further away
+            
+            // now, more aware
+            
+            // Main circle changes beep melody
+            // Other circle comes back closer
+            
+            // that other people
+            // carry their marks too
+            
+            // touch prompt
+            
+            
+        case .chapterE:
+            print("chapter E clicked")
+            
+            // bring in other circles
+            // fade them out
+            
+            // like droplets in a pond
+            // their love created ripples
+            // that are still resonating
+            
+            // bring other circles opacity a tiny bit up
+            
+            // with us today
+            
+            // touch prompt
+            
+            
+        case .ending:
+            print("ending clicked")
+            
+            // fade outs from before
+            // keep a sound playing
+            // thank you
+            // end of the experience
+            
+        }
+        
     }
     
     // Intro functions
@@ -499,172 +667,6 @@ class GameScene: SKScene {
         let sequence = SKAction.sequence([wait, moveOut])
         
         circleG.run(sequence)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        if canTouch == false {
-            return
-        }
-        
-        switch status {
-        case .intro:
-            status = .chapterA
-            fadeOutIntro()
-            setupIntroQuote()
-            fadeInIntroQuote()
-            setupPressText()
-            fadeInImage(spritenode: pressText, duration: 4)
-            fadeInMainCircleMusic()
-            
-        case .chapterA:
-            status = .chapterB
-            fadeOutIntroQuote()
-            fadeOutImage(spritenode: pressText, duration: 2)
-            fadeInMainCircle()
-            
-            // from the very first days of our lives,
-            // we are surrounded by people that care for us
-            setupFirstPhrase()
-            fadeInFirstPhrase()
-            
-            runFirstCircle()
-            updateFirstCircleVolume()
-            
-            setupSecondCircle()
-            runSecondCircle()
-            updateSecondCircleVolume()
-            
-            // Include other circles
-            addSideCircles()
-            runSideCircles()
-            
-            showPressText(spritenode: pressText, delay: 20, fadeIn: 4)
-            
-            // Include other circles sounds (?)
-            
-            // along with them, we learn and grow
-                        
-        case .chapterB:
-            status = .chapterC
-            setupSecondPhrase()
-            fadeOutImage(spritenode: pressText, duration: 2)
-            // Move out circles that stayed from previous
-            removeSideCircles()
-            removeMainCircles()
-            
-            fadeOutImage(spritenode: firstPhrase, duration: 2)
-            
-            /// keep sound slightly changed
-            
-            addChapBCircles()
-            runChapBCircles()
-            chapBCirclesLeave()
-            
-            remainingCircleApproaches()
-            
-            fadeInSecondPhrase()
-            
-            remainingCircleLeaves()
-            
-            // bring main in
-            
-            /// Fade their sounds in (with different tones)
-                        
-            // we learn to love,
-            // and learn what it is to be loved
-            
-            // Move out most, but one circle
-            // Fade in new text
-            // Make movements of circling
-            
-            // sometimes, life leads us to different paths
-            
-            // Move circle away
-            
-            // but we carry on
-            // transform sound
-            // with new marks
-            
-            // Include touch icon
-            
-            // Fade in main sound slightly transformed
-            // Include touch icon
-            
-        case .chapterC:
-            status = .chapterD
-            print("chapter C clicked")
-            
-            // we learn to love,
-            // and learn what it is to be loved
-            
-            // Move out most, but one circle
-            // Fade in new text
-            // Make movements of circling
-            
-            // sometimes, life leads us to different paths
-            
-            // Move circle away
-            
-            // but we carry on
-            // transform sound
-            // with new marks
-            
-            // Include touch icon
-            
-        case .chapterD:
-            status = .chapterE
-            print("chapter D clicked")
-            
-            
-            // Bring some circles again
-            // Bring up their volume
-            // Bring most of the circles opacity down
-            // One circle stays
-            
-            // Main circle beep-beeps
-            // Other circle beeps back and steps back
-            // Main circle repeats beep
-            // Other circle goes further away
-            
-            // now, more aware
-            
-            // Main circle changes beep melody
-            // Other circle comes back closer
-            
-            // that other people
-            // carry their marks too
-            
-            // touch prompt
-            
-            
-        case .chapterE:
-            print("chapter E clicked")
-            
-            // bring in other circles
-            // fade them out
-            
-            // like droplets in a pond
-            // their love created ripples
-            // that are still resonating
-            
-            // bring other circles opacity a tiny bit up
-            
-            // with us today
-            
-            // touch prompt
-            
-            
-        case .ending:
-            print("ending clicked")
-            
-            // fade outs from before
-            // keep a sound playing
-            // thank you
-            // end of the experience
-            
-        }
-        
     }
     
 }
